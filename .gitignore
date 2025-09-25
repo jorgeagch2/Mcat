@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Mantener el modelo ONNX
+!app/src/main/assets/best.onnx
