@@ -3,14 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_gray">
+    android:background="@color/background_gray"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:paddingTop="40dp"> <!-- 👈 margen superior para evitar la barra -->
 
         <!-- Spinner de Centros -->
         <Spinner
@@ -18,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp" />
 
         <!-- Ubicación -->
         <com.google.android.material.textfield.TextInputLayout
@@ -31,7 +33,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputUbicacion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Referencia / Material -->
@@ -44,7 +46,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputMaterial"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Descripción -->
@@ -57,7 +59,7 @@
             android:padding="8dp"
             android:textColor="@android:color/black"
             android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp" />
 
         <!-- Cámara y foto en FrameLayout -->
         <FrameLayout
@@ -69,7 +71,7 @@
                 android:id="@+id/previewView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
             <ImageView
                 android:id="@+id/capturedImage"
@@ -77,7 +79,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"
                 android:visibility="gone"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
         </FrameLayout>
 
         <!-- Botón para tomar foto -->
@@ -86,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tomar Foto"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp" />
 
         <!-- Botones adicionales -->
         <com.google.android.material.button.MaterialButton
@@ -97,7 +99,7 @@
             app:backgroundTint="@color/primary_blue"
             android:textColor="@color/white"
             style="@style/Widget.MaterialComponents.Button"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardarConteo"
@@ -107,7 +109,8 @@
             app:backgroundTint="@color/primary_blue"
             android:textColor="@color/white"
             style="@style/Widget.MaterialComponents.Button"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNuevoConteo"
@@ -116,7 +119,7 @@
             android:text="Nuevo Conteo"
             app:backgroundTint="@color/primary_blue"
             android:textColor="@color/white"
-            style="@style/Widget.MaterialComponents.Button"/>
+            style="@style/Widget.MaterialComponents.Button" />
 
     </LinearLayout>
 </ScrollView>

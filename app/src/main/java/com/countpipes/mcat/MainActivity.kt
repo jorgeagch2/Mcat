@@ -19,6 +19,19 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import com.google.android.material.textfield.TextInputEditText
+import com.yalantis.ucrop.UCrop
+import android.net.Uri
+import java.io.File
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import java.io.FileOutputStream
+import android.app.Activity
+import android.graphics.Color
+import android.view.View
+
+
+
 
 // Clase auxiliar para detecciones
 data class Detection(
@@ -44,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         // Inicializar UI
         previewView = findViewById(R.id.previewView)
@@ -112,6 +126,24 @@ class MainActivity : AppCompatActivity() {
             startCamera()
         }
     }
+    private val cropActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val resultUri = UCrop.getOutput(result.data!!)
+                if (resultUri != null) {
+                    // Aquí ya tienes la imagen recortada
+                    val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(resultUri))
+                    capturedImage.setImageBitmap(bitmap)
+                    capturedImage.visibility = ImageView.VISIBLE
+                    previewView.visibility = PreviewView.GONE
+                }
+            } else if (result.resultCode == UCrop.RESULT_ERROR) {
+                val cropError = UCrop.getError(result.data!!)
+                Toast.makeText(this, "Error al recortar: ${cropError?.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -156,9 +188,24 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
 
-                    capturedImage.setImageBitmap(bitmap)
-                    capturedImage.visibility = ImageView.VISIBLE
-                    previewView.visibility = PreviewView.GONE
+                    // 🔹 Escalar la foto a máx 1280px (para evitar OutOfMemoryError)
+                    val maxSize = 1280
+                    val scale = maxOf(bitmap.width, bitmap.height).toFloat() / maxSize
+                    if (scale > 1) {
+                        val newWidth = (bitmap.width / scale).toInt()
+                        val newHeight = (bitmap.height / scale).toInt()
+                        bitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+                    }
+
+                    // Guardamos la foto en un archivo temporal
+                    val photoFile = File(cacheDir, "captura_${System.currentTimeMillis()}.jpg")
+                    FileOutputStream(photoFile).use { out ->
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out) // 🔹 calidad 90 para ahorrar memoria
+                    }
+                    val photoUri = Uri.fromFile(photoFile)
+
+                    // ✅ Abrir UCrop con el launcher
+                    abrirUCrop(photoUri)
 
                     imageProxy.close()
                 }
@@ -169,6 +216,8 @@ class MainActivity : AppCompatActivity() {
             }
         )
     }
+
+
 
     // Conversión YUV a Bitmap simple
     private fun imageProxyToBitmap(image: ImageProxy): Bitmap {
@@ -380,11 +429,54 @@ class MainActivity : AppCompatActivity() {
         for (det in detections) {
             val centerX = ((det.x1 + det.x2) / 2) * scaleX
             val centerY = ((det.y1 + det.y2) / 2) * scaleY
-            canvas.drawCircle(centerX, centerY, 10f, paint) // puntico verde más visible
+            canvas.drawCircle(centerX, centerY, 20f, paint) // puntico verde más visible
         }
 
         return mutableBitmap
     }
+
+    private fun abrirUCrop(imagenUri: Uri) {
+        // Crear la URI de destino para la imagen recortada
+        val destinoUri = Uri.fromFile(
+            File(cacheDir, "imagen_recortada_${System.currentTimeMillis()}.jpg")
+        )
+
+        // Configurar las opciones de UCrop
+        val options = UCrop.Options().apply {
+            setToolbarTitle("Recorta la imagen")
+            setToolbarColor(ContextCompat.getColor(this@MainActivity, R.color.black))
+            setStatusBarColor(ContextCompat.getColor(this@MainActivity, R.color.black))
+            setToolbarWidgetColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+
+            setHideBottomControls(false)       // Mostrar barra inferior
+            setFreeStyleCropEnabled(true)      // Recorte libre
+            setDimmedLayerColor(Color.parseColor("#AA000000"))
+            setCircleDimmedLayer(false)
+            setShowCropFrame(true)
+            setShowCropGrid(true)
+        }
+
+        // Crear la instancia de UCrop
+        val uCrop = UCrop.of(imagenUri, destinoUri)
+            .withOptions(options)
+            .withAspectRatio(0f, 0f)
+            .withMaxResultSize(1200, 1200)
+
+        // Lanzar la actividad de recorte
+        cropActivityResultLauncher.launch(uCrop.getIntent(this))
+
+        // Ajustar padding automáticamente según la barra de estado y navegación
+        window.decorView.setOnApplyWindowInsetsListener { view, insets ->
+            view.setPadding(
+                view.paddingLeft,
+                insets.systemWindowInsetTop,     // margen superior según status bar
+                view.paddingRight,
+                insets.systemWindowInsetBottom   // margen inferior según barra de navegación
+            )
+            insets
+        }
+    }
+
 
 
 }

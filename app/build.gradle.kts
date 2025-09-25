@@ -49,11 +49,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.16.0")
-// última versión estable
-
+    implementation("com.github.yalantis:ucrop:2.2.8")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
-// versión recomendada
+
 
     // ✅ CameraX (versión estable)
     val camerax_version = "1.3.0"
@@ -70,3 +69,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
+
+
