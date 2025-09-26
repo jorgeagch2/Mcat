@@ -38,6 +38,7 @@ import android.widget.Toast
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import com.countpipes.mcat.RegistrosActivity
 
 
 
@@ -63,10 +64,31 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnRetake: Button
     private var ortEnvironment: OrtEnvironment? = null
     private var ortSession: OrtSession? = null
+    private var ultimoRegistro: Registro? = null
+
+
+
+
+    private lateinit var spinnerCentro: Spinner
+    private lateinit var inputMaterial: TextInputEditText
+    private lateinit var inputUbicacion: TextInputEditText
+    private lateinit var labelDescripcion: TextView
+    private lateinit var btnNuevoConteo: Button
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        spinnerCentro = findViewById(R.id.spinnerCentro)
+        inputMaterial = findViewById(R.id.inputMaterial)
+        inputUbicacion = findViewById(R.id.inputUbicacion)
+        labelDescripcion = findViewById(R.id.labelDescripcion)
+        capturedImage = findViewById(R.id.capturedImage)
+        previewView = findViewById(R.id.previewView)
+        btnNuevoConteo = findViewById(R.id.btnNuevoConteo)
+
 
 
         // Inicializar UI
@@ -79,6 +101,17 @@ class MainActivity : AppCompatActivity() {
 
         val inputMaterial: TextInputEditText = findViewById(R.id.inputMaterial)
         val labelDescripcion: TextView = findViewById(R.id.labelDescripcion)
+
+        // Dentro de tu MainActivity.kt, en onCreate()
+        val btnVerRegistros: Button = findViewById(R.id.btnVerRegistros)
+
+
+        btnVerRegistros.setOnClickListener {
+            // 👇 Aquí abrimos la nueva actividad correctamente
+            val intent = Intent(this, RegistrosActivity::class.java)
+            startActivity(intent)
+        }
+
 
         // Cargar modelo ONNX
         val modeloBytes = cargarModeloONNX()
@@ -126,6 +159,43 @@ class MainActivity : AppCompatActivity() {
         btnTakePhoto.setOnClickListener {
             takePhoto()
         }
+
+        val btnGuardarConteo = findViewById<Button>(R.id.btnGuardarConteo)
+        btnGuardarConteo.setOnClickListener {
+            ultimoRegistro?.let {
+                guardarDatosEnCSV(it)
+                Toast.makeText(this, "Conteo guardado en CSV", Toast.LENGTH_SHORT).show()
+            } ?: run {
+                Toast.makeText(this, "Primero debes realizar una detección", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        btnNuevoConteo.setOnClickListener {
+            // Limpiar campos de texto
+            inputMaterial.text?.clear()
+            inputUbicacion.text?.clear()
+            labelDescripcion.text = ""
+
+            // Reiniciar Spinner al primer elemento
+            spinnerCentro.setSelection(0)
+
+            // Mostrar preview de cámara y ocultar la imagen capturada
+            previewView.visibility = PreviewView.VISIBLE
+            capturedImage.setImageBitmap(null)
+            capturedImage.visibility = ImageView.GONE
+
+            // Limpiar el último registro
+            ultimoRegistro = null
+
+            // Opcional: Toast informativo
+            Toast.makeText(this, "Listo para un nuevo conteo", Toast.LENGTH_SHORT).show()
+        }
+
+
+
+
+
+
 
         // Pedir permisos de cámara
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
@@ -338,7 +408,18 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Tubos detectados: ${finalDetections.size}", Toast.LENGTH_LONG).show()
             }
 
-            // ⚠️ No cerrar tensor ni results aquí en Android (puede dar problemas de memoria)
+// ✅ Crear el objeto Registro pero NO guardarlo todavía
+            ultimoRegistro = Registro(
+                fecha = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(Date()),
+                centro = findViewById<Spinner>(R.id.spinnerCentro).selectedItem.toString(),
+                ubicacion = findViewById<TextInputEditText>(R.id.inputUbicacion).text.toString(),
+                material = findViewById<TextInputEditText>(R.id.inputMaterial).text.toString(),
+                descripcion = findViewById<TextView>(R.id.labelDescripcion).text.toString(),
+                cantidad = finalDetections.size,
+                imagen = "captura_${System.currentTimeMillis()}.jpg"
+            )
+
+
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Error en inferencia ONNX", Toast.LENGTH_SHORT).show()
@@ -486,6 +567,31 @@ class MainActivity : AppCompatActivity() {
             insets
         }
     }
+
+    private fun getCSVFile(): File {
+        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        if (!path.exists()) path.mkdirs()
+        return File(path, "conteos.csv")
+    }
+
+
+    private fun guardarDatosEnCSV(registro: Registro) {
+        val file = getCSVFile()
+
+        // Si no existe, escribir encabezado
+        if (!file.exists()) {
+            file.appendText("Fecha,Centro,Ubicación,Material,Descripción,Cantidad,Imagen\n")
+        }
+
+        // Agregar registro
+        file.appendText(
+            "${registro.fecha},${registro.centro},${registro.ubicacion}," +
+                    "${registro.material},${registro.descripcion},${registro.cantidad},${registro.imagen}\n"
+        )
+    }
+
+
+
 
 }
 

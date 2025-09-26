@@ -52,6 +52,8 @@ dependencies {
     implementation("com.github.yalantis:ucrop:2.2.8")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
 
 
     // ✅ CameraX (versión estable)

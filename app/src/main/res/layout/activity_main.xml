@@ -172,6 +172,15 @@
                 android:text="Nuevo Conteo"
                 android:layout_marginBottom="12dp" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnVerRegistros"
+                style="@style/RoundedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Ver Registros Guardados"
+                android:layout_marginBottom="12dp" />
+
+
             <!-- Espaciador final -->
             <Space
                 android:layout_width="match_parent"
