@@ -1,125 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_gray"
+    android:background="@color/background_gray_soft"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="16dp"
-        android:paddingTop="40dp"> <!-- 👈 margen superior para evitar la barra -->
+        android:background="@color/toolbar_dark"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Spinner de Centros -->
-        <Spinner
-            android:id="@+id/spinnerCentro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Ubicación -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutUbicacion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ubicación"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputUbicacion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Referencia / Material -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Referencia / Material"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputMaterial"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Descripción -->
         <TextView
-            android:id="@+id/labelDescripcion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Descripción aparecerá aquí"
-            android:textSize="16sp"
-            android:padding="8dp"
-            android:textColor="@android:color/black"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Cámara y foto en FrameLayout -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_marginBottom="16dp">
-
-            <androidx.camera.view.PreviewView
-                android:id="@+id/previewView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:id="@+id/capturedImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                android:background="@android:color/darker_gray" />
-        </FrameLayout>
-
-        <!-- Botón para tomar foto -->
-        <Button
-            android:id="@+id/btnTakePhoto"
+            android:id="@+id/toolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tomar Foto"
-            android:layout_marginBottom="16dp" />
+            android:text="Contador de tubos"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+    </androidx.appcompat.widget.Toolbar>
 
-        <!-- Botones adicionales -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnContarTubos"
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contar Tubos"
-            app:backgroundTint="@color/primary_blue"
-            android:textColor="@color/white"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_marginBottom="12dp" />
+            android:gravity="center_horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGuardarConteo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Guardar Conteo"
-            app:backgroundTint="@color/primary_blue"
-            android:textColor="@color/white"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="12dp" />
+            <!-- Spinner de Centros -->
+            <Spinner
+                android:id="@+id/spinnerCentro"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="40dp"
+                android:spinnerMode="dropdown"
+                android:background="@drawable/spinner_background"
+                android:layout_marginBottom="16dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNuevoConteo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nuevo Conteo"
-            app:backgroundTint="@color/primary_blue"
-            android:textColor="@color/white"
-            style="@style/Widget.MaterialComponents.Button" />
+            <!-- Ubicación -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutUbicacion"
+                style="@style/RoundedTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ubicación"
+                android:layout_marginBottom="12dp">
 
-    </LinearLayout>
-</ScrollView>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputUbicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_black"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Referencia / Material -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/RoundedTextInputLayout"
+                android:hint="Referencia / Material"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputMaterial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_black"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Descripción -->
+            <TextView
+                android:id="@+id/labelDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descripción aparecerá aquí"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:textColor="@color/text_black"
+                android:background="@drawable/rounded_textview"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Línea superior cámara -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_divider"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Cámara y foto en FrameLayout -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_marginBottom="8dp">
+
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/previewView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/capturedImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    android:background="@color/card_white" />
+            </FrameLayout>
+
+            <!-- Línea inferior cámara -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_divider"
+                android:layout_marginTop="8dp"/>
+
+            <!-- Espaciador entre cámara y botones -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp"/>
+
+            <!-- Botones uniformes -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTakePhoto"
+                style="@style/RoundedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Tomar Foto"
+                android:layout_marginBottom="12dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnContarTubos"
+                style="@style/RoundedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Contar Tubos"
+                android:layout_marginBottom="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardarConteo"
+                style="@style/RoundedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Guardar Conteo"
+                android:layout_marginBottom="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNuevoConteo"
+                style="@style/RoundedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Nuevo Conteo"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Espaciador final -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

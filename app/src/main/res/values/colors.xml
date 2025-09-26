@@ -1,13 +1,27 @@
 <resources>
-    <!-- Fondo y texto -->
-    <color name="background_gray">#EEEEEE</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
+    <!-- Fondo principal y cards -->
+    <color name="background_light">#F0F0F0</color>   <!-- Gris claro -->
+    <color name="toolbar_dark">#0D47A1</color>       <!-- Azul oscuro -->
+    <color name="card_white">#FFFFFF</color>         <!-- Blanco para tarjetas / campos -->
 
-    <!-- Azul para botones y acentos -->
-    <color name="primary_blue">#1976D2</color>
-    <color name="primary_blue_dark">#1565C0</color>
-    <color name="primary_blue_light">#42A5F5</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <!-- Acentos / botones -->
+    <color name="accent_blue">#1E88E5</color>       <!-- Azul brillante -->
+
+    <!-- Textos -->
+    <color name="text_black">#000000</color>         <!-- Texto principal -->
+    <color name="text_dark_gray">#555555</color>     <!-- Texto secundario / hints -->
+
+    <!-- Compatibilidad con nombres antiguos -->
+    <color name="primary_blue">@color/accent_blue</color>
+    <color name="primary_blue_dark">@color/accent_blue</color>
+    <color name="primary_blue_light">@color/accent_blue</color>
+    <color name="white">@color/card_white</color>
+    <color name="background_gray">@color/background_light</color>
+    <color name="text_primary">@color/text_black</color>
+    <color name="text_secondary">@color/text_dark_gray</color>
+    <color name="black">@color/text_black</color>
+    <color name="background_gray_soft">#ECEFF1</color> <!-- gris muy suave -->
+    <color name="gray_divider">#B0BEC5</color>
+
+
 </resources>

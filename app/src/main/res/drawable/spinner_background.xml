@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Fondo del Spinner -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#D3D3D3"/> <!-- gris claro -->
+            <corners android:radius="12dp"/> <!-- bordes redondeados -->
+            <padding
+                android:left="8dp"
+                android:top="8dp"
+                android:right="8dp"
+                android:bottom="8dp"/>
+        </shape>
+    </item>
+
+    <!-- Flecha a la derecha -->
+    <item android:gravity="end|center_vertical">
+        <vector
+            android:width="32dp"
+        android:height="32dp"
+        android:viewportWidth="24"
+        android:viewportHeight="24"
+        android:tint="#000000">
+        <path
+            android:fillColor="#000000"
+            android:pathData="M7,10l5,5 5,-5z"/>
+    </vector>
+</item>
+
+    </layer-list>

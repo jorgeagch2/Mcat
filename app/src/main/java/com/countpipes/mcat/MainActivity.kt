@@ -29,6 +29,16 @@ import java.io.FileOutputStream
 import android.app.Activity
 import android.graphics.Color
 import android.view.View
+import android.content.ContentValues
+import android.content.Intent
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.widget.Toast
+import java.io.OutputStream
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 
 
@@ -477,6 +487,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
 }
+
