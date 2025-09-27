@@ -77,6 +77,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var inputUbicacion: TextInputEditText
     private lateinit var labelDescripcion: TextView
     private lateinit var btnNuevoConteo: Button
+    private lateinit var scrollView: ScrollView
+
 
 
 
@@ -84,6 +86,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // --- Inicializar vistas ---
+        scrollView = findViewById(R.id.scrollView)
         spinnerCentro = findViewById(R.id.spinnerCentro)
         inputMaterial = findViewById(R.id.inputMaterial)
         inputUbicacion = findViewById(R.id.inputUbicacion)
@@ -91,55 +95,33 @@ class MainActivity : AppCompatActivity() {
         capturedImage = findViewById(R.id.capturedImage)
         previewView = findViewById(R.id.previewView)
         btnNuevoConteo = findViewById(R.id.btnNuevoConteo)
-        tvConteo = findViewById(R.id.labelConteo)
-
-
-
-
-
-        // Inicializar UI
-        previewView = findViewById(R.id.previewView)
-        capturedImage = findViewById(R.id.capturedImage)
         btnTakePhoto = findViewById(R.id.btnTakePhoto)
+        tvConteo = findViewById(R.id.tvConteo)
 
-        val spinnerCentro: Spinner = findViewById(R.id.spinnerCentro)
-        val listaCentros = leerCentrosDesdeCSV()
-
-        val inputMaterial: TextInputEditText = findViewById(R.id.inputMaterial)
-        val labelDescripcion: TextView = findViewById(R.id.labelDescripcion)
-
-        // Dentro de tu MainActivity.kt, en onCreate()
-        val btnVerRegistros: Button = findViewById(R.id.btnVerRegistros)
-
-
-        btnVerRegistros.setOnClickListener {
-            // 👇 Aquí abrimos la nueva actividad correctamente
-            val intent = Intent(this, RegistrosActivity::class.java)
-            startActivity(intent)
-        }
-
-
-        // Cargar modelo ONNX
-        val modeloBytes = cargarModeloONNX()
-        if (modeloBytes != null) {
-            inicializarONNX(modeloBytes)
-        }
-
-        // Cargar referencias desde CSV
-        val mapaReferencias: Map<String, String> = cargarReferencias()
-
-        val btnContarTubos: Button = findViewById(R.id.btnContarTubos)
-        btnContarTubos.setOnClickListener {
-            val drawable = capturedImage.drawable
-            if (drawable != null) {
-                val bitmap = (drawable as android.graphics.drawable.BitmapDrawable).bitmap
-                inferirImagen(bitmap)
-            } else {
-                Toast.makeText(this, "Primero toma una foto", Toast.LENGTH_SHORT).show()
+        // --- Auto-scroll al enfocar EditText ---
+        val editTexts = listOf(inputUbicacion, inputMaterial)
+        editTexts.forEach { editText ->
+            editText.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    scrollView.post { scrollView.smoothScrollTo(0, v.top) }
+                }
             }
         }
 
-        // Listener para descripción de material
+        // --- Cargar lista de centros ---
+        val listaCentros = leerCentrosDesdeCSV()
+        if (listaCentros.isNotEmpty()) {
+            val adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item,
+                listaCentros
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerCentro.adapter = adapter
+        }
+
+        // --- Cargar referencias ---
+        val mapaReferencias: Map<String, String> = cargarReferencias()
         inputMaterial.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -151,23 +133,24 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        if (listaCentros.isNotEmpty()) {
-            val adapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_item,
-                listaCentros
-            )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerCentro.adapter = adapter
+        // --- Botón para ver registros ---
+        findViewById<Button>(R.id.btnVerRegistros).setOnClickListener {
+            startActivity(Intent(this, RegistrosActivity::class.java))
         }
 
-        // Botón para tomar foto
-        btnTakePhoto.setOnClickListener {
-            takePhoto()
+        // --- Botón para contar tubos ---
+        findViewById<Button>(R.id.btnContarTubos).setOnClickListener {
+            val drawable = capturedImage.drawable
+            if (drawable != null) {
+                val bitmap = (drawable as android.graphics.drawable.BitmapDrawable).bitmap
+                inferirImagen(bitmap)
+            } else {
+                Toast.makeText(this, "Primero toma una foto", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        val btnGuardarConteo = findViewById<Button>(R.id.btnGuardarConteo)
-        btnGuardarConteo.setOnClickListener {
+        // --- Botón para guardar conteo ---
+        findViewById<Button>(R.id.btnGuardarConteo).setOnClickListener {
             ultimoRegistro?.let {
                 guardarDatosEnCSV(it)
                 Toast.makeText(this, "Conteo guardado en CSV", Toast.LENGTH_SHORT).show()
@@ -176,33 +159,29 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // --- Botón para nuevo conteo ---
         btnNuevoConteo.setOnClickListener {
-            // Limpiar campos de texto
             inputMaterial.text?.clear()
             inputUbicacion.text?.clear()
             labelDescripcion.text = ""
-
-            // Reiniciar Spinner al primer elemento
             spinnerCentro.setSelection(0)
-
-            // Mostrar preview de cámara y ocultar la imagen capturada
             previewView.visibility = PreviewView.VISIBLE
             capturedImage.setImageBitmap(null)
             capturedImage.visibility = ImageView.GONE
-
-            // Limpiar el último registro
             ultimoRegistro = null
-
-            // 🔹 Reiniciar el conteo en el label
             tvConteo.text = "Conteo actual: 0 tubos"
-
+            currentFocus?.clearFocus()
+            scrollView.scrollTo(0, 0)
             Toast.makeText(this, "Listo para un nuevo conteo", Toast.LENGTH_SHORT).show()
         }
 
+        // --- Botón para tomar foto ---
+        btnTakePhoto.setOnClickListener { takePhoto() }
 
+        // --- Cargar modelo ONNX ---
+        cargarModeloONNX()?.let { inicializarONNX(it) }
 
-
-        // Pedir permisos de cámara
+        // --- Pedir permisos de cámara ---
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -211,6 +190,7 @@ class MainActivity : AppCompatActivity() {
             startCamera()
         }
     }
+
     private val cropActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {

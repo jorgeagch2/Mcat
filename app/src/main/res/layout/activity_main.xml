@@ -31,9 +31,11 @@
 
     <!-- Contenido principal con Scroll -->
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:overScrollMode="never"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/btnVerRegistros"
         app:layout_constraintStart_toStartOf="parent"
@@ -127,7 +129,7 @@
 
             <!-- Label de Conteo -->
             <TextView
-                android:id="@+id/labelConteo"
+                android:id="@+id/tvConteo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Conteo actual: 0 tubos"
