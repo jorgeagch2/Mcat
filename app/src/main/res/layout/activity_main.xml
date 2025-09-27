@@ -11,7 +11,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:background="@color/toolbar_dark"
         android:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,37 +24,38 @@
             android:layout_height="wrap_content"
             android:text="Contador de tubos"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:layout_gravity="center"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Scrollable content -->
+    <!-- Contenido principal con Scroll -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/btnVerRegistros"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:padding="16dp">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/contentMain"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
+            android:padding="8dp">
 
             <!-- Spinner de Centros -->
             <Spinner
                 android:id="@+id/spinnerCentro"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="40dp"
+                android:layout_height="42dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="24dp"
                 android:spinnerMode="dropdown"
                 android:background="@drawable/spinner_background"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="8dp" />
 
             <!-- Ubicación -->
             <com.google.android.material.textfield.TextInputLayout
@@ -63,12 +64,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ubicación"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="6dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputUbicacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:padding="12dp"
                     android:textColor="@color/text_black"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,12 +81,14 @@
                 android:layout_height="wrap_content"
                 style="@style/RoundedTextInputLayout"
                 android:hint="Referencia / Material"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="6dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputMaterial"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:padding="12dp"
                     android:textColor="@color/text_black"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,24 +98,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Descripción aparecerá aquí"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:padding="12dp"
                 android:textColor="@color/text_black"
                 android:background="@drawable/rounded_textview"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="8dp" />
 
-            <!-- Línea superior cámara -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray_divider"
-                android:layout_marginBottom="8dp"/>
-
-            <!-- Cámara y foto en FrameLayout -->
+            <!-- Cámara -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_marginBottom="8dp">
+                android:layout_height="420dp"
+                android:layout_marginBottom="6dp">
 
                 <androidx.camera.view.PreviewView
                     android:id="@+id/previewView"
@@ -127,66 +125,111 @@
                     android:background="@color/card_white" />
             </FrameLayout>
 
-            <!-- Línea inferior cámara -->
-            <View
+            <!-- Label de Conteo -->
+            <TextView
+                android:id="@+id/labelConteo"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray_divider"
-                android:layout_marginTop="8dp"/>
-
-            <!-- Espaciador entre cámara y botones -->
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="12dp"/>
-
-            <!-- Botones uniformes -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnTakePhoto"
-                style="@style/RoundedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Tomar Foto"
-                android:layout_marginBottom="12dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnContarTubos"
-                style="@style/RoundedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Contar Tubos"
-                android:layout_marginBottom="12dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGuardarConteo"
-                style="@style/RoundedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Guardar Conteo"
-                android:layout_marginBottom="12dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnNuevoConteo"
-                style="@style/RoundedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Nuevo Conteo"
-                android:layout_marginBottom="12dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnVerRegistros"
-                style="@style/RoundedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Ver Registros Guardados"
-                android:layout_marginBottom="12dp" />
-
-
-            <!-- Espaciador final -->
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="24dp"/>
-
+                android:layout_height="wrap_content"
+                android:text="Conteo actual: 0 tubos"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:padding="8dp"
+                android:background="@color/primaryColor"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="2dp"
+                android:elevation="2dp"/>
         </LinearLayout>
     </ScrollView>
 
+    <!-- Botón Ver Registros -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVerRegistros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ver registros"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:padding="8dp"
+        android:elevation="2dp"
+        app:backgroundTint="@color/bottom_nav_bg"
+        android:layout_marginBottom="0.5dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomButtons"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Botonera inferior con 4 botones -->
+    <LinearLayout
+        android:id="@+id/bottomButtons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        android:background="@color/bottom_nav_bg"
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTakePhoto"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Foto"
+            android:textSize="10sp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:icon="@android:drawable/ic_menu_camera"
+            app:iconGravity="top"
+            app:iconTint="@color/white"
+            app:iconSize="20dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContarTubos"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Contar"
+            android:textSize="10sp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:icon="@android:drawable/ic_menu_sort_by_size"
+            app:iconGravity="top"
+            app:iconTint="@color/white"
+            app:iconSize="20dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGuardarConteo"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Guardar"
+            android:textSize="10sp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:icon="@android:drawable/ic_menu_save"
+            app:iconGravity="top"
+            app:iconTint="@color/white"
+            app:iconSize="20dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNuevoConteo"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nuevo"
+            android:textSize="10sp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:icon="@android:drawable/ic_input_add"
+            app:iconGravity="top"
+            app:iconTint="@color/white"
+            app:iconSize="20dp"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

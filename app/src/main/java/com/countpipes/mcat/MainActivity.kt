@@ -66,6 +66,9 @@ class MainActivity : AppCompatActivity() {
     private var ortSession: OrtSession? = null
     private var ultimoRegistro: Registro? = null
 
+    private lateinit var tvConteo: TextView
+
+
 
 
 
@@ -88,6 +91,9 @@ class MainActivity : AppCompatActivity() {
         capturedImage = findViewById(R.id.capturedImage)
         previewView = findViewById(R.id.previewView)
         btnNuevoConteo = findViewById(R.id.btnNuevoConteo)
+        tvConteo = findViewById(R.id.labelConteo)
+
+
 
 
 
@@ -187,12 +193,11 @@ class MainActivity : AppCompatActivity() {
             // Limpiar el último registro
             ultimoRegistro = null
 
-            // Opcional: Toast informativo
+            // 🔹 Reiniciar el conteo en el label
+            tvConteo.text = "Conteo actual: 0 tubos"
+
             Toast.makeText(this, "Listo para un nuevo conteo", Toast.LENGTH_SHORT).show()
         }
-
-
-
 
 
 
@@ -405,8 +410,10 @@ class MainActivity : AppCompatActivity() {
 
             runOnUiThread {
                 capturedImage.setImageBitmap(bitmapWithDetections)
+                tvConteo.text = "Conteo actual: ${finalDetections.size} tubos"
                 Toast.makeText(this, "Tubos detectados: ${finalDetections.size}", Toast.LENGTH_LONG).show()
             }
+
 
 // ✅ Crear el objeto Registro pero NO guardarlo todavía
             ultimoRegistro = Registro(
@@ -590,8 +597,11 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-
-
+    override fun onResume() {
+        super.onResume()
+        // Limpiar focus para evitar scroll extraño después de la cámara
+        currentFocus?.clearFocus()
+    }
 
 }
 

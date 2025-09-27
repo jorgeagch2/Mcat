@@ -22,6 +22,9 @@
     <color name="black">@color/text_black</color>
     <color name="background_gray_soft">#ECEFF1</color> <!-- gris muy suave -->
     <color name="gray_divider">#B0BEC5</color>
+    <color name="primaryColor">#3F51B5</color> <!-- azul ejemplo -->
+    <color name="bottom_nav_bg">#2C2C2C</color> <!-- gris oscuro ejemplo -->
+
 
 
 </resources>
